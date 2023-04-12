@@ -3,6 +3,8 @@
 import { CloudTasksClient } from '@google-cloud/tasks';
 import { credentials } from '@grpc/grpc-js';
 
+const url = 'https://f09e-2605-59c8-3091-d710-2dca-a845-3b04-f811.ngrok-free.app/api/v1/process'
+
 const client = new CloudTasksClient({
   port: 8123,
   servicePath: 'localhost',
@@ -28,7 +30,7 @@ await client.createTask({
   task: {
     httpRequest: {
       httpMethod: 'POST',
-      url: 'https://f09e-2605-59c8-3091-d710-2dca-a845-3b04-f811.ngrok-free.app/api/v1/process',
+      url,
       body: Buffer.from(JSON.stringify(payload)).toString("base64"),
       headers: {
         "Content-Type": "application/json"
