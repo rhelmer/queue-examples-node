@@ -1,22 +1,24 @@
 import client from 'amqplib'
 
-const url = 'https://f09e-2605-59c8-3091-d710-2dca-a845-3b04-f811.ngrok-free.app/api/v1/process';
+const url = 'https://6821-2605-59c8-3091-d710-2dca-a845-3b04-f811.ngrok-free.app/api/v1/process';
 
 async function main() {
-  const consumer = channel => msg => {
+  const consumer = channel => async msg => {
     if (msg) {
       // Display the received message
       console.log(msg.content.toString())
 
       // Send to webserver
-      fetch(url, {
+      const result = await fetch(url, {
         method: "POST",
         url,
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(msg)
+        body: JSON.stringify({ 'payload': msg.content.toString() })
       });
+
+      console.debug('fetched', result.status)
 
       // Acknowledge the message, otherwise RabbitMQ will keep re-trying.
       channel.ack(msg)
@@ -24,7 +26,7 @@ async function main() {
   }
 
   const connection = await client.connect(
-    'amqp://guest:guest@localhost:5672'
+    'amqp://guest:guest@127.0.0.1:5672'
   )
 
   // Create a channel

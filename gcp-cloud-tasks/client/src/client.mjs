@@ -3,7 +3,7 @@
 import { CloudTasksClient } from '@google-cloud/tasks';
 import { credentials } from '@grpc/grpc-js';
 
-const url = 'https://f09e-2605-59c8-3091-d710-2dca-a845-3b04-f811.ngrok-free.app/api/v1/process'
+const url = 'https://6821-2605-59c8-3091-d710-2dca-a845-3b04-f811.ngrok-free.app/api/v1/process'
 
 const client = new CloudTasksClient({
   port: 8123,
@@ -20,7 +20,13 @@ const payload = {
   key: "value"
 };
 
-const queue = await client.getQueue({ name: queueName })
+let queue;
+try {
+  queue = await client.getQueue({ name: queueName })
+} catch (ex) {
+  console.info(ex.message);
+}
+
 if (!queue) {
   await client.createQueue({ parent, queue: { name: queueName } });
 }

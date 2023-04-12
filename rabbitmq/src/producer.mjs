@@ -2,7 +2,7 @@ import client from 'amqplib'
 
 async function main() {
   const connection = await client.connect(
-    'amqp://guest:guest@localhost:5672'
+    'amqp://guest:guest@127.0.0.1:5672'
   )
 
   // Create a channel
